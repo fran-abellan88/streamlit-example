@@ -32,7 +32,6 @@ st.set_page_config(layout="wide")
 # -- START OF WEB APP --
 col1, col2, col3 = st.columns(3)
 col2.title('Predict Accounts Value')
-col2.title('Predict Accounts Value')
 
 st.header('Load files')
 
@@ -67,7 +66,7 @@ if uploaded_file:
         df.dropna(inplace=True)
         X_test = df.drop(columns='account_uuid')
 
-        st.write('Input data (Top 5 rows)')
+        st.write('**Input data (Top 5 rows)**')
         st.dataframe(data=X_test.head(5), width=2000, height=300)
 
         # -- LOCAL --
@@ -84,10 +83,10 @@ if uploaded_file:
         df_results['account_uuid'] = df['account_uuid']
         df_results['convert'] = y_pred
 
-        st.write('Input data with predictions (Top 5 rows)')
+        st.write('**Input data with predictions (Top 5 rows)**')
         st.dataframe(data=df_results.head(5), width=3000, height=250)
 
-        st.write('Accounts value (Top 5 rows)')
+        st.write('**Accounts value (Top 5 rows)**')
         df_results['account_value_by_product'] = df_results['premium'] * df_results['convert']
         df_accounts_value = df_results.groupby('account_uuid')['account_value_by_product'].sum().to_frame().rename(columns={'account_value_by_product': 'account_value'})
         df_accounts_value.reset_index(inplace=True)
