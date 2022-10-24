@@ -3,54 +3,58 @@ import pandas as pd
 import os
 import joblib
 import sys
+import base64
 
 # -- Change path to Phase2 folder --
 if os.path.basename(os.path.normpath(os.getcwd())) != 'streamlit-example':
     sys.path.append('..')
     # os.chdir('..')
-    print(os.getcwd())
 
-# # TODO: Leer esto de un fichero externo
-# features = ['state',
-#             'industry',
-#             'subindustry',
-#             'year_established',
-#             'annual_revenue',
-#             'total_payroll',
-#             'business_structure',
-#             'num_employees',
-#             'product',
-#             'premium',
-#             'carrier_id']
+
+@st.cache(suppress_st_warning=True)
+def get_table_download_link_csv(df, filename):
+    """
+    Generates a link allowing the data in a given panda dataframe to be downloaded
+    :param df:
+    :param filename:
+    :return: href to csv
+    """
+    # csv = df.to_csv(index=False)
+    csv = df.to_csv(sep=";", decimal=",", index=False, encoding='utf-8').encode('utf-8')
+    b64 = base64.b64encode(csv).decode('utf-8')
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download csv file</a>'
+
+    return href
+
 
 st.set_page_config(layout="wide")
-st.write(os.getcwd())
 
-col1, col2  = st.columns(2)
+# -- START OF WEB APP --
+col1, col2, col3 = st.columns(3)
 col2.title('Predict Account Value')
 
-st.header('Cargar tablón de rechazos')
+st.header('Load files')
 
-with st.expander("Load file accounts_test.csv"):
+with st.expander("Load file 'accounts_test.csv'"):
     accounts_test = pd.DataFrame()
     uploaded_file = st.file_uploader("", type="csv", key="accounts_test")
 
 if uploaded_file:
     try:
         accounts_test = pd.read_csv(uploaded_file, sep=",", encoding='latin-1')
-        st.dataframe(data=accounts_test.head(5), width=2000, height=300)
+        # st.dataframe(data=accounts_test.head(5), width=2000, height=300)
     except Exception as e:
         print(e)
         pass
 
-    with st.expander("Load file quotes_test.csv"):
+    with st.expander("Load file 'quotes_test.csv'"):
         quotes_test = pd.DataFrame()
         uploaded_file = st.file_uploader("", type="csv", key="quotes_test")
 
     if uploaded_file:
         try:
             quotes_test = pd.read_csv(uploaded_file, sep=",", encoding='latin-1')
-            st.dataframe(data=quotes_test.head(5), width=2000, height=300)
+            # st.dataframe(data=quotes_test.head(5), width=2000, height=300)
         except Exception as e:
             print(e)
             pass
@@ -77,5 +81,22 @@ if uploaded_file:
         df_results['account_uuid'] = df['account_uuid']
         df_results['convert'] = y_pred
 
-        st.write('Predictions')
+        st.write('Input data with predictions')
         st.dataframe(data=df_results.head(5), width=3000, height=250)
+
+        st.write('Accounts value')
+        df_results['account_value_by_product'] = df_results['premium'] * df_results['convert']
+        df_accounts_value = df_results.groupby('account_uuid')['account_value_by_product'].sum().to_frame().rename(columns={'account_value_by_product': 'accounts_value'})
+        df_accounts_value.reset_index(inplace=True)
+        st.dataframe(data=df_accounts_value.head(5), width=3000, height=250)
+
+        st.header('Download predictions')
+
+        filename = st.text_input("Filename", "predictions")
+        if st.button('Download predictions'):
+            st.dataframe(df_results.head(5))
+            st.markdown(get_table_download_link_csv(df_results, filename), unsafe_allow_html=True)
+        filename = st.text_input("Filename", "accounts_value")
+        if st.button('Download accounts value'):
+            st.dataframe(df_accounts_value.head(5))
+            st.markdown(get_table_download_link_csv(df_accounts_value, filename), unsafe_allow_html=True)
