@@ -63,7 +63,11 @@ if uploaded_file:
         st.write('Input data')
         st.dataframe(data=X_test.head(5), width=2000, height=300)
 
+        # -- LOCAL --
         clf = joblib.load('../models/catboost_model.joblib')
+
+        # -- REMOTE --
+        clf = joblib.load('models/catboost_model.joblib')
 
         y_pred = clf.predict(X_test)
         y_pred_proba_test = clf.predict_proba(X_test)
