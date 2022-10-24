@@ -67,7 +67,7 @@ if uploaded_file:
         X_test = df.drop(columns='account_uuid')
 
         st.write('**Input data (Top 5 rows)**')
-        st.dataframe(data=X_test.head(5), width=2000, height=200)
+        st.dataframe(data=X_test.head(5), width=2000, height=210)
 
         # -- LOCAL --
         # clf = joblib.load('../models/catboost_model.joblib')
@@ -90,7 +90,7 @@ if uploaded_file:
         df_results['account_value_by_product'] = df_results['premium'] * df_results['convert']
         df_accounts_value = df_results.groupby('account_uuid')['account_value_by_product'].sum().to_frame().rename(columns={'account_value_by_product': 'account_value'})
         df_accounts_value.reset_index(inplace=True)
-        st.dataframe(data=df_accounts_value.head(5), width=3000, height=220)
+        st.dataframe(data=df_accounts_value.head(5), width=3000, height=210)
 
         st.header('Download predictions')
 
