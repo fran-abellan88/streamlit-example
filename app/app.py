@@ -31,7 +31,8 @@ st.set_page_config(layout="wide")
 
 # -- START OF WEB APP --
 col1, col2, col3 = st.columns(3)
-col2.title('Predict Account Value')
+col2.title('Predict Accounts Value')
+col2.title('Predict Accounts Value')
 
 st.header('Load files')
 
@@ -42,6 +43,7 @@ with st.expander("Load file 'accounts_test.csv'"):
 if uploaded_file:
     try:
         accounts_test = pd.read_csv(uploaded_file, sep=",", encoding='latin-1')
+        st.success('**File loaded successfully**')
         # st.dataframe(data=accounts_test.head(5), width=2000, height=300)
     except Exception as e:
         print(e)
@@ -54,6 +56,7 @@ if uploaded_file:
     if uploaded_file:
         try:
             quotes_test = pd.read_csv(uploaded_file, sep=",", encoding='latin-1')
+            st.success('**File loaded successfully**')
             # st.dataframe(data=quotes_test.head(5), width=2000, height=300)
         except Exception as e:
             print(e)
@@ -64,7 +67,7 @@ if uploaded_file:
         df.dropna(inplace=True)
         X_test = df.drop(columns='account_uuid')
 
-        st.write('Input data')
+        st.write('Input data (Top 5 rows)')
         st.dataframe(data=X_test.head(5), width=2000, height=300)
 
         # -- LOCAL --
@@ -81,12 +84,12 @@ if uploaded_file:
         df_results['account_uuid'] = df['account_uuid']
         df_results['convert'] = y_pred
 
-        st.write('Input data with predictions')
+        st.write('Input data with predictions (Top 5 rows)')
         st.dataframe(data=df_results.head(5), width=3000, height=250)
 
-        st.write('Accounts value')
+        st.write('Accounts value (Top 5 rows)')
         df_results['account_value_by_product'] = df_results['premium'] * df_results['convert']
-        df_accounts_value = df_results.groupby('account_uuid')['account_value_by_product'].sum().to_frame().rename(columns={'account_value_by_product': 'accounts_value'})
+        df_accounts_value = df_results.groupby('account_uuid')['account_value_by_product'].sum().to_frame().rename(columns={'account_value_by_product': 'account_value'})
         df_accounts_value.reset_index(inplace=True)
         st.dataframe(data=df_accounts_value.head(5), width=3000, height=250)
 
@@ -94,9 +97,7 @@ if uploaded_file:
 
         filename = st.text_input("Filename", "predictions")
         if st.button('Download predictions'):
-            st.dataframe(df_results.head(5))
             st.markdown(get_table_download_link_csv(df_results, filename), unsafe_allow_html=True)
         filename = st.text_input("Filename", "accounts_value")
         if st.button('Download accounts value'):
-            st.dataframe(df_accounts_value.head(5))
             st.markdown(get_table_download_link_csv(df_accounts_value, filename), unsafe_allow_html=True)
