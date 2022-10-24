@@ -1,2 +1,2 @@
 # streamlit-example
-Streamlit app example
+Example of an streamlit app
