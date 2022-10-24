@@ -9,11 +9,9 @@ if os.path.basename(os.path.normpath(os.getcwd())) != 'streamlit-example':
     sys.path.append('..')
     print(os.getcwd())
 
-# st.write("My First Streamlit Web App")
+st.write("My First Streamlit Web App")
+st.write(os.getcwd())
 
-# df = pd.DataFrame({"one": [1, 2, 3], "two": [4, 5, 6], "three": [7, 8, 9]})
+df = pd.DataFrame({"one": [1, 2, 3], "two": [4, 5, 6], "three": [7, 8, 9]})
 
-accounts_train = pd.read_csv('data/accounts_train.csv')
-
-
-st.write(accounts_train)
+st.write(df)
