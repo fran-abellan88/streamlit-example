@@ -64,7 +64,7 @@ if uploaded_file:
         st.dataframe(data=X_test.head(5), width=2000, height=300)
 
         # -- LOCAL --
-        clf = joblib.load('../models/catboost_model.joblib')
+        # clf = joblib.load('../models/catboost_model.joblib')
 
         # -- REMOTE --
         clf = joblib.load('models/catboost_model.joblib')
