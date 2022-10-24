@@ -67,7 +67,7 @@ if uploaded_file:
         X_test = df.drop(columns='account_uuid')
 
         st.write('**Input data (Top 5 rows)**')
-        st.dataframe(data=X_test.head(5), width=2000, height=300)
+        st.dataframe(data=X_test.head(5), width=2000, height=250)
 
         # -- LOCAL --
         # clf = joblib.load('../models/catboost_model.joblib')
