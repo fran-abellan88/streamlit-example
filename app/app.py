@@ -14,7 +14,7 @@ if os.path.basename(os.path.normpath(os.getcwd())) != 'streamlit-example':
 @st.cache(suppress_st_warning=True)
 def get_table_download_link_csv(df, filename):
     """
-    Generates a link allowing the data in a given panda dataframe to be downloaded
+    Generates a link allowing the data in a given pandas dataframe to be downloaded
     :param df:
     :param filename:
     :return: href to csv
