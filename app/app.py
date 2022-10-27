@@ -64,6 +64,13 @@ if uploaded_file:
         df = accounts_test.merge(quotes_test, how='left', on='account_uuid')
         # TODO: Modificar esto
         df.dropna(inplace=True)
+
+        # -- CAST COLUMNS --
+        df['carrier_id'] = 'carrier_id_' + df['carrier_id'].astype(str)
+        df['year_established'] = df['year_established'].astype(int)
+        df['num_employees'] = df['num_employees'].astype(int)
+
+        # -- CREATE X_test --
         X_test = df.drop(columns='account_uuid')
 
         st.write('**Input data (Top 5 rows)**')
