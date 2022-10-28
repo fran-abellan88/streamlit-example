@@ -131,3 +131,5 @@ dmypy.json
 data
 catboost_info
 docs
+app/.DS_store
+.DS_store
